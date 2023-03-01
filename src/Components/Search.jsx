@@ -1,20 +1,34 @@
 import React, { useState } from "react";
 
-function Search() {
+function Search({ searchContent }) {
   const [text, setText] = useState("");
   const [type, setType] = useState("");
 
+  const setSearchContent = (e) => {
+    e.preventDefault();
+    if (type && text) {
+      searchContent(type, text);
+      setText("");
+      setType("");
+    } else if (type || text) {
+      searchContent(type, text);
+      setText("");
+      setType("");
+    }
+  };
+
   return (
     <div className="form-control flex justify-center mt-10  sm:mt-40 h-full">
-      <form className="input-group w-full mx-auto text-center flex items-center justify-center ">
+      <form
+        className="input-group w-full mx-auto text-center flex items-center justify-center "
+        onSubmit={setSearchContent}
+      >
         <select
           className="select select-bordered"
           value={type}
           onChange={(e) => setType(e.target.value)}
         >
-          <option disabled defaultValue>
-            Type
-          </option>
+          <option defaultValue>Type</option>
           <option value="movie">Movie</option>
           <option value="series">Series</option>
         </select>
@@ -25,7 +39,7 @@ function Search() {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button className="btn btn-square">
+        <button className="btn btn-square" type="submit">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"

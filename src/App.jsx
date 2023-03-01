@@ -14,24 +14,33 @@ function App() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://www.omdbapi.com/?apikey=63c39150&t=${"The Flash"}&type=${"movie"}`
+          `https://www.omdbapi.com/?apikey=63c39150&t=${
+            searchText ? searchText : "Iron man"
+          }&type=${searchType}`
         );
         const data = await response?.data;
         setContent(data);
-        setLoading(false);
+        if (data.Response === "False") {
+          setLoading(true);
+        } else {
+          setLoading(false);
+        }
       } catch (error) {
         setLoading(false);
         setError(error);
       }
     };
     fetchData();
-  }, []);
+  }, [searchText, searchType]);
 
-  console.log(content);
+  const searchContent = (type, title) => {
+    setSearchText(title);
+    setSearchType(type);
+  };
 
   return (
     <main className="sm:max-w-screen-xl  mx-auto px-4">
-      <Search />
+      <Search searchContent={searchContent} />
       <Card content={content} loading={loading} />
     </main>
   );
